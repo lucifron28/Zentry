@@ -132,78 +132,52 @@ class WebhookService:
     
     @staticmethod
     def _format_teams_payload(event_type: str, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Format payload for Microsoft Teams webhooks"""
+        """Format payload for Microsoft Teams webhooks using simple text format"""
         
-        # Color mapping for different event types
-        colors = {
-            'task_completed': 'good',     # Green
-            'badge_earned': 'warning',    # Yellow/Orange
-            'project_created': 'accent',  # Blue
-            'milestone_reached': 'attention', # Red/Orange
-            'daily_streak': 'accent',     # Blue
-        }
-        
-        theme_color = colors.get(event_type, 'default')
-        
-        # Base card structure
-        card = {
-            "@type": "MessageCard",
-            "@context": "https://schema.org/extensions",
-            "summary": WebhookService._get_event_title(event_type),
-            "themeColor": theme_color,
-            "sections": []
-        }
-        
-        # Customize card based on event type
+        # Create simple text message based on event type
         if event_type == 'task_completed':
-            card["sections"] = [{
-                "activityTitle": f"🎉 Task Completed!",
-                "activitySubtitle": f"{data.get('user_name', 'Someone')} completed: {data.get('task_title', 'Unknown Task')}",
-                "facts": [
-                    {"name": "Project", "value": data.get('project_name', 'Unknown')},
-                    {"name": "Points Earned", "value": str(data.get('points', 0))}
-                ]
-            }]
-            
+            text = f"🎉 **Task Completed!**\n\n" \
+                   f"**User:** {data.get('user_name', 'Someone')}\n" \
+                   f"**Task:** {data.get('task_title', 'Unknown Task')}\n" \
+                   f"**Project:** {data.get('project_name', 'Unknown')}\n" \
+                   f"**Points Earned:** {data.get('points', 0)} XP\n\n" \
+                   f"Great job! 🚀"
+                   
         elif event_type == 'badge_earned':
-            card["sections"] = [{
-                "activityTitle": f"🏆 New Badge Earned!",
-                "activitySubtitle": f"{data.get('user_name', 'Someone')} earned: {data.get('badge_name', 'Unknown Badge')}",
-                "facts": [
-                    {"name": "Description", "value": data.get('badge_description', 'No description')}
-                ]
-            }]
-            
+            text = f"🏆 **New Badge Earned!**\n\n" \
+                   f"**User:** {data.get('user_name', 'Someone')}\n" \
+                   f"**Badge:** {data.get('badge_name', 'Unknown Badge')}\n" \
+                   f"**Description:** {data.get('badge_description', 'No description')}\n\n" \
+                   f"Congratulations! 🎉"
+                   
         elif event_type == 'project_created':
-            card["sections"] = [{
-                "activityTitle": f"🚀 New Project Created!",
-                "activitySubtitle": f"Project: {data.get('project_name', 'Unknown Project')}",
-                "facts": [
-                    {"name": "Created by", "value": data.get('user_name', 'Unknown')},
-                    {"name": "Description", "value": data.get('project_description', 'No description')[:100]}
-                ]
-            }]
-            
+            text = f"🚀 **New Project Created!**\n\n" \
+                   f"**Project:** {data.get('project_name', 'Unknown Project')}\n" \
+                   f"**Created by:** {data.get('user_name', 'Someone')}\n" \
+                   f"**Description:** {data.get('project_description', 'No description')}\n\n" \
+                   f"Let's build something amazing! 💪"
+                   
         elif event_type == 'milestone_reached':
-            card["sections"] = [{
-                "activityTitle": f"🎯 Milestone Reached!",
-                "activitySubtitle": f"Milestone: {data.get('milestone_name', 'Unknown Milestone')}",
-                "facts": [
-                    {"name": "Project", "value": data.get('project_name', 'Unknown')},
-                    {"name": "Progress", "value": f"{data.get('progress', 0)}%"}
-                ]
-            }]
-            
+            text = f"🎯 **Milestone Reached!**\n\n" \
+                   f"**Project:** {data.get('project_name', 'Unknown Project')}\n" \
+                   f"**Milestone:** {data.get('milestone_name', 'Unknown Milestone')}\n" \
+                   f"**Progress:** {data.get('progress', 0)}%\n\n" \
+                   f"Keep up the great work! 📈"
+                   
         elif event_type == 'daily_streak':
-            card["sections"] = [{
-                "activityTitle": f"🔥 Streak Alert!",
-                "activitySubtitle": f"{data.get('user_name', 'Someone')} is on a {data.get('streak_days', 0)} day streak!",
-                "facts": [
-                    {"name": "Streak Type", "value": data.get('streak_type', 'Daily tasks')}
-                ]
-            }]
+            text = f"🔥 **Daily Streak!**\n\n" \
+                   f"**User:** {data.get('user_name', 'Someone')}\n" \
+                   f"**Streak:** {data.get('streak_count', 0)} days\n" \
+                   f"**Total Points:** {data.get('total_points', 0)} XP\n\n" \
+                   f"You're on fire! Keep it up! 🎯"
+                   
+        else:
+            text = f"📢 **Zentry Notification**\n\n" \
+                   f"**Event:** {event_type.replace('_', ' ').title()}\n" \
+                   f"**Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n" \
+                   f"Something awesome happened in your project! 🎉"
         
-        return card
+        return {"text": text}
     
     @staticmethod
     def _get_event_title(event_type: str) -> str:

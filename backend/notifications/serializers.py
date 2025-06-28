@@ -41,5 +41,4 @@ class NotificationLogSerializer(serializers.ModelSerializer):
 
 class WebhookTestSerializer(serializers.Serializer):
     """Serializer for testing webhook endpoints"""
-    webhook_integration_id = serializers.IntegerField()
-    test_message = serializers.CharField(max_length=500, default="Test message from Zentry!")
+    test_message = serializers.CharField(max_length=500, default="Test message from Zentry!", required=False)

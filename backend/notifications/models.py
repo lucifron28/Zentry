@@ -21,7 +21,7 @@ class WebhookIntegration(models.Model):
     
     name = models.CharField(max_length=100)
     webhook_type = models.CharField(max_length=20, choices=WEBHOOK_TYPES)
-    webhook_url = models.URLField()
+    webhook_url = models.URLField(max_length=500)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='webhook_integrations')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     event_types = models.JSONField(default=list, help_text="List of event types to trigger this webhook")

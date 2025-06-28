@@ -7,5 +7,5 @@ router.register(r'webhook-integrations', views.WebhookIntegrationViewSet)
 router.register(r'notification-logs', views.NotificationLogViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('', include(router.urls)),
 ]
