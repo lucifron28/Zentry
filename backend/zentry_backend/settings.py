@@ -15,6 +15,12 @@ from pathlib import Path
 from decouple import config
 import dj_database_url
 
+import sys
+print("=" * 50, file=sys.stderr)
+print("DJANGO STARTING UP", file=sys.stderr)
+print(f"ALLOWED_HOSTS will be set to: ['*']", file=sys.stderr)
+print("=" * 50, file=sys.stderr)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,6 +37,9 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 # Dynamic ALLOWED_HOSTS for different deployment platforms
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0,.railway.app,.vercel.app,.onrender.com').split(',')
 ALLOWED_HOSTS = ['*']
+print(f"🔧 DJANGO DEBUG: ALLOWED_HOSTS = {ALLOWED_HOSTS}")
+print(f"🔧 DJANGO DEBUG: DEBUG = {DEBUG}")
+print(f"🔧 DJANGO DEBUG: SECRET_KEY length = {len(SECRET_KEY)}")
 
 # Application definition
 
@@ -157,17 +166,19 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings - allow Vercel and local development
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # SvelteKit dev server
-    "http://127.0.0.1:5173",
-    "https://*.vercel.app",   # Vercel deployments
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",  # SvelteKit dev server
+#     "http://127.0.0.1:5173",
+#     "https://*.vercel.app",   # Vercel deployments
+# ]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 # For production - allow all origins temporarily (you can restrict later)
-if not DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
-else:
-    CORS_ALLOW_CREDENTIALS = True
+# if not DEBUG:
+#     CORS_ALLOW_ALL_ORIGINS = True
+# else:
+#     CORS_ALLOW_CREDENTIALS = True
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
