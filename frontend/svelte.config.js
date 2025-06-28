@@ -3,10 +3,9 @@ import adapter from '@sveltejs/adapter-vercel';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
-		// Use Vercel adapter for optimal deployment
+		// Use Vercel adapter with explicit Node.js runtime
 		adapter: adapter({
-			// Optional: Configure edge functions
-			runtime: 'nodejs18.x'
+			runtime: 'nodejs20.x'
 		})
 	}
 };
