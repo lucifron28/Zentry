@@ -23,6 +23,7 @@
           <button 
             on:click={toggleSidebar}
             class="p-2 rounded-lg hover:bg-slate-700/50 transition-colors"
+            aria-label="Toggle sidebar navigation"
           >
             <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>

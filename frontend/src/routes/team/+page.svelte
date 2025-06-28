@@ -1,7 +1,21 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	
-	let teamMembers = [
+	type TeamMember = {
+		id: number;
+		username: string;
+		first_name: string;
+		last_name: string;
+		avatar: string;
+		role: string;
+		level: number;
+		experience_points: number;
+		current_streak: number;
+		tasks_completed: number;
+		rank: number;
+	};
+
+	let teamMembers: TeamMember[] = [
 		{
 			id: 1,
 			username: 'mike_backend',
@@ -44,8 +58,8 @@
 		{
 			id: 4,
 			username: 'admin',
-			first_name: 'Admin',
-			last_name: 'User',
+			first_name: 'Ron Vincent',
+			last_name: 'Cada',
 			avatar: '👑',
 			role: 'Project Manager',
 			level: 1,
@@ -66,10 +80,12 @@
 	
 	// Sort team members based on selected leaderboard
 	$: sortedMembers = [...teamMembers].sort((a, b) => {
-		return b[selectedLeaderboard] - a[selectedLeaderboard];
+		const aValue = a[selectedLeaderboard as keyof TeamMember] as number;
+		const bValue = b[selectedLeaderboard as keyof TeamMember] as number;
+		return bValue - aValue;
 	});
 	
-	function getRankColor(rank) {
+	function getRankColor(rank: number): string {
 		switch (rank) {
 			case 1: return 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-yellow-900';
 			case 2: return 'bg-gradient-to-r from-gray-300 to-gray-500 text-gray-900';
@@ -78,7 +94,7 @@
 		}
 	}
 	
-	function getRankEmoji(rank) {
+	function getRankEmoji(rank: number): string {
 		switch (rank) {
 			case 1: return '🥇';
 			case 2: return '🥈';
@@ -87,7 +103,7 @@
 		}
 	}
 	
-	function getLevelColor(level) {
+	function getLevelColor(level: number): string {
 		if (level >= 5) return 'text-purple-400';
 		if (level >= 3) return 'text-blue-400';
 		if (level >= 1) return 'text-green-400';
@@ -111,8 +127,9 @@
 		
 		<!-- Leaderboard Filter -->
 		<div class="flex items-center gap-2">
-			<label class="text-slate-400 text-sm font-medium">Sort by:</label>
+			<label for="leaderboard-sort" class="text-slate-400 text-sm font-medium">Sort by:</label>
 			<select 
+				id="leaderboard-sort"
 				bind:value={selectedLeaderboard}
 				class="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
 			>
@@ -210,7 +227,7 @@
 					<!-- Current Metric -->
 					<div class="text-center min-w-[80px]">
 						<div class="text-2xl font-bold text-white">
-							{member[selectedLeaderboard]}
+							{member[selectedLeaderboard as keyof TeamMember]}
 						</div>
 						<div class="text-xs text-slate-400">
 							{selectedLeaderboard === 'experience_points' ? 'XP' : 

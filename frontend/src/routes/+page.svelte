@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   
   let user = {
-    name: 'Alex',
+    name: 'Ron Vincent Cada',
     level: 3,
     experience: 250,
     experienceToNext: 500,

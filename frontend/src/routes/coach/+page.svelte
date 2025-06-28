@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	
 	let messages = [
@@ -105,12 +105,12 @@
 		}, 1500);
 	}
 	
-	function useSuggestedPrompt(prompt) {
+	function useSuggestedPrompt(prompt: string) {
 		currentMessage = prompt;
 		sendMessage();
 	}
 	
-	function generateAIResponse(userMessage) {
+	function generateAIResponse(userMessage: string) {
 		const responses = [
 			"Great question! Based on your current progress, I'd recommend focusing on high-priority tasks that align with your team's goals. Let me break this down for you... 🎯",
 			"I've analyzed your productivity patterns, and here's what I found: You tend to be most effective when you tackle challenging tasks early in the day. Consider blocking your calendar for deep work! 📊",
@@ -122,9 +122,9 @@
 		return responses[Math.floor(Math.random() * responses.length)];
 	}
 	
-	function formatTime(timestamp) {
+	function formatTime(timestamp: Date) {
 		const now = new Date();
-		const diff = now - timestamp;
+		const diff = now.getTime() - timestamp.getTime();
 		const minutes = Math.floor(diff / 60000);
 		
 		if (minutes < 1) return 'Just now';
@@ -137,7 +137,7 @@
 		return `${days}d ago`;
 	}
 	
-	function getPriorityColor(priority) {
+	function getPriorityColor(priority: string) {
 		switch (priority) {
 			case 'high': return 'border-red-500 bg-red-500/10';
 			case 'medium': return 'border-yellow-500 bg-yellow-500/10';

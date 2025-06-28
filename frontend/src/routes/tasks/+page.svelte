@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	
 	let tasks = [
@@ -73,7 +73,7 @@
 	$: inProgressTasks = tasks.filter(task => task.status === 'in_progress');
 	$: completedTasks = tasks.filter(task => task.status === 'completed');
 	
-	function getPriorityColor(priority) {
+	function getPriorityColor(priority: string) {
 		switch (priority) {
 			case 'urgent': return 'border-red-500 bg-red-500/10';
 			case 'high': return 'border-orange-500 bg-orange-500/10';
@@ -83,7 +83,7 @@
 		}
 	}
 	
-	function getStatusColor(status) {
+	function getStatusColor(status: string) {
 		switch (status) {
 			case 'completed': return 'bg-green-500/20 text-green-400 border-green-500/30';
 			case 'in_progress': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
@@ -92,7 +92,7 @@
 		}
 	}
 	
-	function toggleTaskStatus(taskId) {
+	function toggleTaskStatus(taskId: number) {
 		const task = tasks.find(t => t.id === taskId);
 		if (task) {
 			if (task.status === 'todo') {
@@ -294,14 +294,29 @@
 
 <!-- Add Task Modal -->
 {#if showAddTask}
-	<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" on:click={() => showAddTask = false}>
-		<div class="bg-gradient-to-br from-slate-800 to-slate-700 rounded-xl p-6 border border-slate-600 w-full max-w-md mx-4" on:click|stopPropagation>
-			<h2 class="text-xl font-semibold text-white mb-4">Add New Task</h2>
+	<div
+		class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+		role="dialog"
+		tabindex="0"
+		aria-modal="true"
+		on:click={() => showAddTask = false}
+		on:keydown={(e) => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { showAddTask = false; } }}
+	>
+		<div
+			class="bg-gradient-to-br from-slate-800 to-slate-700 rounded-xl p-6 border border-slate-600 w-full max-w-md mx-4"
+			role="dialog"
+			aria-labelledby="add-task-title"
+			tabindex="-1"
+			on:click|stopPropagation
+			on:keydown|stopPropagation
+		>
+			<h2 id="add-task-title" class="text-xl font-semibold text-white mb-4">Add New Task</h2>
 			
 			<form on:submit|preventDefault={addTask} class="space-y-4">
 				<div>
-					<label class="block text-sm font-medium text-slate-300 mb-2">Task Title</label>
+					<label for="task-title" class="block text-sm font-medium text-slate-300 mb-2">Task Title</label>
 					<input 
+						id="task-title"
 						bind:value={newTask.title}
 						type="text" 
 						class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
@@ -311,8 +326,9 @@
 				</div>
 				
 				<div>
-					<label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+					<label for="task-desc" class="block text-sm font-medium text-slate-300 mb-2">Description</label>
 					<textarea 
+						id="task-desc"
 						bind:value={newTask.description}
 						class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
 						rows="3"
@@ -322,8 +338,9 @@
 				
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class="block text-sm font-medium text-slate-300 mb-2">Emoji</label>
+						<label for="task-emoji" class="block text-sm font-medium text-slate-300 mb-2">Emoji</label>
 						<input 
+							id="task-emoji"
 							bind:value={newTask.emoji}
 							type="text" 
 							class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
@@ -332,8 +349,9 @@
 					</div>
 					
 					<div>
-						<label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+						<label for="task-priority" class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
 						<select 
+							id="task-priority"
 							bind:value={newTask.priority}
 							class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
 						>

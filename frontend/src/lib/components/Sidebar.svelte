@@ -9,6 +9,7 @@
     { name: 'Team', href: '/team', icon: '👥', emoji: '🤝' },
     { name: 'Achievements', href: '/achievements', icon: '🏆', emoji: '🎖️' },
     { name: 'AI Coach', href: '/coach', icon: '🤖', emoji: '💡' },
+    { name: 'Settings', href: '/settings', icon: '⚙️', emoji: '🔧' },
   ];
   
   $: currentPath = $page.url.pathname;

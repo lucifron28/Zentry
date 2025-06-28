@@ -1,7 +1,20 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	
-	let userBadges = [
+	type Badge = {
+		id: number;
+		name: string;
+		description: string;
+		emoji: string;
+		experience_reward: number;
+		earned: boolean;
+		earned_at?: string;
+		requirement_value?: number;
+		current_progress?: number;
+		can_claim?: boolean;
+	};
+
+	let userBadges: Badge[] = [
 		{ 
 			id: 1, 
 			name: 'First Steps', 
@@ -22,7 +35,7 @@
 		}
 	];
 	
-	let availableBadges = [
+	let availableBadges: Badge[] = [
 		{ 
 			id: 3, 
 			name: 'Task Master', 
@@ -32,7 +45,8 @@
 			current_progress: 12,
 			experience_reward: 100,
 			earned: true,
-			can_claim: true
+			can_claim: true,
+			earned_at: undefined
 		},
 		{ 
 			id: 4, 
@@ -43,7 +57,8 @@
 			current_progress: 5,
 			experience_reward: 150,
 			earned: false,
-			can_claim: false
+			can_claim: false,
+			earned_at: undefined
 		},
 		{ 
 			id: 5, 
@@ -54,7 +69,8 @@
 			current_progress: 3,
 			experience_reward: 200,
 			earned: false,
-			can_claim: false
+			can_claim: false,
+			earned_at: undefined
 		},
 		{ 
 			id: 6, 
@@ -65,7 +81,8 @@
 			current_progress: 3,
 			experience_reward: 500,
 			earned: false,
-			can_claim: false
+			can_claim: false,
+			earned_at: undefined
 		}
 	];
 	
@@ -85,15 +102,15 @@
 			case 'earned':
 				return allBadges.filter(badge => badge.earned);
 			case 'available':
-				return allBadges.filter(badge => !badge.earned && badge.can_claim);
+				return allBadges.filter(badge => !badge.earned && 'can_claim' in badge && badge.can_claim === true);
 			case 'locked':
-				return allBadges.filter(badge => !badge.earned && !badge.can_claim);
+				return allBadges.filter(badge => !badge.earned && (!('can_claim' in badge) || badge.can_claim === false));
 			default:
 				return allBadges;
 		}
 	})();
 	
-	function claimBadge(badgeId) {
+	function claimBadge(badgeId: number) {
 		const badge = availableBadges.find(b => b.id === badgeId);
 		if (badge && badge.can_claim) {
 			badge.earned = true;
@@ -103,13 +120,13 @@
 		}
 	}
 	
-	function getProgressPercentage(badge) {
+	function getProgressPercentage(badge: Badge): number {
 		if (badge.earned) return 100;
 		if (!badge.requirement_value) return 0;
-		return Math.min((badge.current_progress / badge.requirement_value) * 100, 100);
+		return Math.min((badge.current_progress || 0) / badge.requirement_value * 100, 100);
 	}
 	
-	function getBadgeTypeColor(badge) {
+	function getBadgeTypeColor(badge: Badge): string {
 		if (badge.earned) return 'border-green-500 bg-green-500/10';
 		if (badge.can_claim) return 'border-yellow-500 bg-yellow-500/10 animate-pulse';
 		return 'border-slate-500 bg-slate-500/5';
@@ -132,8 +149,9 @@
 		
 		<!-- Category Filter -->
 		<div class="flex items-center gap-2">
-			<label class="text-slate-400 text-sm font-medium">Filter:</label>
+			<label for="category-filter" class="text-slate-400 text-sm font-medium">Filter:</label>
 			<select 
+				id="category-filter"
 				bind:value={selectedCategory}
 				class="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none"
 			>
