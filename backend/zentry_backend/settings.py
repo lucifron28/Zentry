@@ -30,21 +30,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 # Dynamic ALLOWED_HOSTS for different deployment platforms
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0,.railway.app,.vercel.app,.onrender.com').split(',')
-ALLOWED_HOSTS_ENV = config('ALLOWED_HOSTS', default='')
-if ALLOWED_HOSTS_ENV:
-    ALLOWED_HOSTS = ALLOWED_HOSTS_ENV.split(',')
-else:
-    # Default hosts for development and common deployment platforms
-    ALLOWED_HOSTS = [
-        'localhost',
-        '127.0.0.1',
-        '0.0.0.0',
-        '*.railway.app',
-        '*.vercel.app', 
-        '*.onrender.com',
-        'zentry-oyyo.onrender.com',
-    ]
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
