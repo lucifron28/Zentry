@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { api } from '$lib/api';
 	
 	/** @type {{
 		id: number,
@@ -98,12 +99,7 @@
 	
 	async function loadWebhookIntegrations() {
 		try {
-			const response = await fetch('http://localhost:8000/api/notifications/webhook-integrations/', {
-				headers: {
-					'Content-Type': 'application/json',
-					// TODO: Add authentication headers when auth is implemented
-				}
-			});
+			const response = await api.get('/api/notifications/webhook-integrations/');
 			
 			if (response.ok) {
 				const data = await response.json();
@@ -178,12 +174,7 @@
 	
 	async function loadNotificationLogs() {
 		try {
-			const response = await fetch('http://localhost:8000/api/notifications/notification-logs/', {
-				headers: {
-					'Content-Type': 'application/json',
-					// TODO: Add authentication headers when auth is implemented
-				}
-			});
+			const response = await api.get('/api/notifications/notification-logs/');
 			
 			if (response.ok) {
 				const data = await response.json();
@@ -288,20 +279,13 @@
 		loading = true;
 		
 		try {
-			const response = await fetch('http://localhost:8000/api/notifications/webhook-integrations/', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					// TODO: Add authentication headers when auth is implemented
-				},
-				body: JSON.stringify({
-					name: newWebhook.name.trim(),
-					webhook_type: newWebhook.webhook_type,
-					webhook_url: newWebhook.webhook_url.trim(),
-					project: newWebhook.project,
-					event_types: newWebhook.event_types,
-					is_active: newWebhook.is_active
-				})
+			const response = await api.post('/api/notifications/webhook-integrations/', {
+				name: newWebhook.name.trim(),
+				webhook_type: newWebhook.webhook_type,
+				webhook_url: newWebhook.webhook_url.trim(),
+				project: newWebhook.project,
+				event_types: newWebhook.event_types,
+				is_active: newWebhook.is_active
 			});
 			
 			if (response.ok) {
@@ -342,15 +326,8 @@
 			}
 			
 			// Use Django API to test webhook
-			const response = await fetch(`http://localhost:8000/api/notifications/webhook-integrations/${webhookId}/test/`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					// TODO: Add authentication headers when auth is implemented
-				},
-				body: JSON.stringify({
-					test_message: `🧪 Test notification from Zentry!\n\nThis is a test message for ${webhook.name}.\n\nIf you see this message, your webhook integration is working correctly! 🎉`
-				})
+			const response = await api.post(`/api/notifications/webhook-integrations/${webhookId}/test/`, {
+				test_message: `🧪 Test notification from Zentry!\n\nThis is a test message for ${webhook.name}.\n\nIf you see this message, your webhook integration is working correctly! 🎉`
 			});
 			
 			if (response.ok) {
@@ -427,20 +404,13 @@
 		loading = true;
 		
 		try {
-			const response = await fetch(`http://localhost:8000/api/notifications/webhook-integrations/${editingWebhook}/`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					// TODO: Add authentication headers when auth is implemented
-				},
-				body: JSON.stringify({
-					name: editWebhookData.name.trim(),
-					webhook_type: webhook.webhook_type, // Keep original type
-					webhook_url: editWebhookData.webhook_url.trim(),
-					project: webhook.project || 1, // Keep original project
-					event_types: editWebhookData.event_types,
-					is_active: editWebhookData.is_active
-				})
+			const response = await api.put(`/api/notifications/webhook-integrations/${editingWebhook}/`, {
+				name: editWebhookData.name.trim(),
+				webhook_type: webhook.webhook_type, // Keep original type
+				webhook_url: editWebhookData.webhook_url.trim(),
+				project: webhook.project || 1, // Keep original project
+				event_types: editWebhookData.event_types,
+				is_active: editWebhookData.is_active
 			});
 			
 			if (response.ok) {
