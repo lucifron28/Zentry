@@ -16,8 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
+
+def api_root(request):
+    return JsonResponse({
+        'message': 'Zentry Backend API',
+        'status': 'running',
+        'version': '1.0.0',
+        'endpoints': {
+            'admin': '/admin/',
+            'api': {
+                'users': '/api/users/',
+                'tasks': '/api/tasks/',
+                'achievements': '/api/achievements/',
+                'notifications': '/api/notifications/',
+            }
+        }
+    })
 
 urlpatterns = [
+    path('', api_root, name='api-root'),
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/tasks/', include('tasks.urls')),
