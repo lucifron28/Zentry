@@ -1,11 +1,13 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from . import views
+from django.urls import path
+from django.http import JsonResponse
 
-router = DefaultRouter()
-router.register(r'badges', views.BadgeViewSet)
-router.register(r'user-badges', views.UserBadgeViewSet)
+def badges_list(request):
+    return JsonResponse({'results': [], 'count': 0})
+
+def user_badges_list(request):
+    return JsonResponse({'results': [], 'count': 0})
 
 urlpatterns = [
-    path('achievements/', include(router.urls)),
+    path('achievements/badges/', badges_list, name='badges'),
+    path('achievements/user-badges/', user_badges_list, name='user-badges'),
 ]

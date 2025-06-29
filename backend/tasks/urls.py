@@ -1,11 +1,13 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from . import views
+from django.urls import path
+from django.http import JsonResponse
 
-router = DefaultRouter()
-router.register(r'projects', views.ProjectViewSet)
-router.register(r'tasks', views.TaskViewSet)
+def projects_list(request):
+    return JsonResponse({'results': [], 'count': 0})
+
+def tasks_list(request):
+    return JsonResponse({'results': [], 'count': 0})
 
 urlpatterns = [
-    path('tasks/', include(router.urls)),
+    path('tasks/projects/', projects_list, name='projects'),
+    path('tasks/tasks/', tasks_list, name='tasks'),
 ]

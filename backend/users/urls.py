@@ -1,11 +1,13 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from . import views
+from django.urls import path
+from django.http import JsonResponse
 
-router = DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'profiles', views.UserProfileViewSet)
+def users_list(request):
+    return JsonResponse({'results': [], 'count': 0})
+
+def profiles_list(request):
+    return JsonResponse({'results': [], 'count': 0})
 
 urlpatterns = [
-    path('users/', include(router.urls)),
+    path('users/users/', users_list, name='users'),
+    path('users/profiles/', profiles_list, name='profiles'),
 ]
