@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-90t#8bp(wsxb^me8+hbeo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '.railway.app', '.vercel.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '.render.com', '.onrender.com']
 
 
 # Application definition
@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'zentry_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Use SQLite for both development and production (simpler deployment)
+# Using SQLite for all environments
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -149,11 +149,13 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 
-# CORS settings - allow Vercel and local development
+# CORS settings - allow frontend and local development
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # SvelteKit dev server
     "http://127.0.0.1:5173",
     "https://*.vercel.app",   # Vercel deployments
+    "https://*.render.com",   # Render deployments
+    "https://*.onrender.com", # Render deployments
 ]
 
 # For production - allow all origins temporarily (you can restrict later)
